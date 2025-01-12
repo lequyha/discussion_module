@@ -1,7 +1,7 @@
+import 'package:core_module/core_module.dart';
 import 'package:discussion_module/src/ui/tagger/widgets/loading_indicator.dart';
 import 'package:discussion_module/src/ui/tagger/view_models/search_view_model.dart';
 import 'package:discussion_module/src/ui/tagger/widgets/tagger.dart';
-import 'package:discussion_module/src/domain/models/user.dart';
 import 'package:flutter/material.dart';
 
 class UserListView extends StatelessWidget {
@@ -35,7 +35,7 @@ class UserListView extends StatelessWidget {
         child: ValueListenableBuilder<bool>(
           valueListenable: searchViewModel.loading,
           builder: (_, loading, __) {
-            return ValueListenableBuilder<List<User>>(
+            return ValueListenableBuilder<List<UserModel>>(
               valueListenable: searchViewModel.users,
               builder: (_, users, __) {
                 return Column(
@@ -69,12 +69,12 @@ class UserListView extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              title: Text(user.fullName),
-                              subtitle: Text("@${user.userName}"),
+                              title: Text(user.text),
+                              subtitle: Text("@${user.value}"),
                               onTap: () {
                                 tagController.addTag(
-                                  id: user.id,
-                                  name: user.userName,
+                                  id: user.value,
+                                  name: user.value,
                                 );
                               },
                             );

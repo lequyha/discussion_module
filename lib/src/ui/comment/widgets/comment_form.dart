@@ -36,6 +36,7 @@ class CommentForm extends StatelessWidget {
         tagController: commentController,
       ),
       controller: commentController,
+      searchRegex: RegExp(r'^\S*$'),
       onSearch: (String query, String triggerCharacter) {
         if (triggerCharacter == "@") {
           searchViewModel.searchUser(query);

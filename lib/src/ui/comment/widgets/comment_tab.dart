@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:core_module/core_module.dart';
 import 'package:core_module/di/injection.dart';
 import 'package:discussion_module/src/ui/comment/bloc/comment_bloc.dart';
@@ -123,11 +125,13 @@ class _CommentTabState extends State<CommentTab> {
                                   ),
                                 ),
                                 OutlinedButton(
-                                    onPressed: () {
-                                      _focusNode.unfocus();
-                                      _commentController.clear();
-                                    },
-                                    child: Text("Gửi")),
+                                  onPressed: () {
+                                    log(_commentController.formattedText);
+                                    _focusNode.unfocus();
+                                    _commentController.clear();
+                                  },
+                                  child: Text("Gửi"),
+                                ),
                               ],
                             ),
                           )

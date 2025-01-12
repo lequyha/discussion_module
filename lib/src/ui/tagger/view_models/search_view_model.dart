@@ -1,20 +1,32 @@
-import 'package:discussion_module/src/domain/models/user.dart';
+import 'dart:async';
+import 'package:core_module/core_module.dart';
+import 'package:core_module/di/injection.dart';
 import 'package:flutter/material.dart';
 
-///Search view model
-final searchViewModel = SearchViewModel();
+/// Search view model
+final searchViewModel =
+    SearchViewModel(controlRepository: getIt<ControlRepository>());
 
 enum SearchResultView { users, none }
 
 class SearchViewModel {
-  late final ValueNotifier<List<User>> _users = ValueNotifier([]);
-  ValueNotifier<List<User>> get users => _users;
+  final ControlRepository _controlRepository;
+
+  late final ValueNotifier<List<UserModel>> _users = ValueNotifier([]);
+  ValueNotifier<List<UserModel>> get users => _users;
 
   late final ValueNotifier<bool> _loading = ValueNotifier(false);
   ValueNotifier<bool> get loading => _loading;
 
   late final ValueNotifier<SearchResultView> _activeView =
       ValueNotifier(SearchResultView.none);
+
+  Timer? _debounceTimer; // Timer for debounce
+
+  SearchViewModel({
+    required ControlRepository controlRepository,
+  }) : _controlRepository = controlRepository;
+
   ValueNotifier<SearchResultView> get activeView => _activeView;
 
   void _setLoading(bool val) {
@@ -23,27 +35,32 @@ class SearchViewModel {
     }
   }
 
-  Future<void> searchUser(String query) async {
+  void searchUser(String query) {
     _activeView.value = SearchResultView.users;
     if (query.isEmpty) return;
 
-    query = query.toLowerCase().trim();
+    // Cancel any existing debounce timer
+    _debounceTimer?.cancel();
 
-    _users.value = [];
+    // Start a new debounce timer
+    _debounceTimer = Timer(const Duration(milliseconds: 1000), () async {
+      query = query.toLowerCase().trim();
 
-    _setLoading(true);
+      _users.value = [];
+      _setLoading(true);
 
-    await Future.delayed(const Duration(milliseconds: 250));
+      final result =
+          await _controlRepository.getUsers(type: 'user', keyword: query);
 
-    final result = User.allUsers
-        .where(
-          (user) =>
-              user.userName.toLowerCase().contains(query) ||
-              user.fullName.toLowerCase().contains(query),
-        )
-        .toList();
+      _users.value = [...result];
+      _setLoading(false);
+    });
+  }
 
-    _users.value = [...result];
-    _setLoading(false);
+  void dispose() {
+    _debounceTimer?.cancel(); // Cancel timer when disposing the view model
+    _users.dispose();
+    _loading.dispose();
+    _activeView.dispose();
   }
 }

@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core_module/core_module.dart';
+import 'package:core_module/di/injection.dart';
 import 'package:discussion_module/src/domain/models/comment_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager_dio/flutter_cache_manager_dio.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 class CommentOption extends StatelessWidget {
@@ -22,6 +24,7 @@ class CommentOption extends StatelessWidget {
           padding: const EdgeInsets.only(top: AppPadding.kMediumPadding),
           child: CachedNetworkImage(
             imageUrl: comment.avatar ?? '',
+            cacheManager: getIt<DioCacheManager>(),
             placeholder: (context, url) => Image.asset(
               Assets.kDefaultAvatar,
               width: 24.0,
@@ -60,10 +63,9 @@ class CommentOption extends StatelessWidget {
                         style: context.textTheme.kXSmallRegular
                             .copyWith(color: AppColors.kNeutralGray5Color),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.more_vert),
-                        padding: EdgeInsets.zero,
+                      GestureDetector(
+                        onTap: () {},
+                        child: Icon(Icons.more_vert),
                       ),
                     ],
                   ),
