@@ -1,40 +1,61 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:core_module/core_module.dart';
+import 'package:discussion_module/src/domain/entities/comment_entity.dart';
 
-part 'comment_model.freezed.dart';
+class CommentModel {
+  final int id;
+  final int? ticketId;
+  final int? commentId;
+  final String createdUsername;
+  final String createdTimeAgo;
+  final String body;
+  final String userAvatar;
+  final CommentType type;
+  final bool status;
+  final bool isPrivate;
+  final int replyTotal;
+  final List<CommentModel> replyComments;
 
-part 'comment_model.g.dart';
+  CommentModel({
+    required this.id,
+    this.ticketId,
+    this.commentId,
+    this.createdUsername = '',
+    this.createdTimeAgo = '',
+    this.body = '',
+    this.userAvatar = '',
+    this.type = CommentType.unknown,
+    this.status = true,
+    this.isPrivate = false,
+    this.replyTotal = 0,
+    this.replyComments = const <CommentModel>[],
+  });
 
-enum CommentType {
-  @JsonValue('Ticket')
-  ticket,
-}
+  factory CommentModel.fromEntity({required CommentEntity entity}) {
+    final replyComments = entity.replyComments
+        .map((dto) => CommentModel.fromEntity(entity: dto))
+        .toList();
+    return CommentModel(
+      id: entity.id,
+      ticketId: entity.type == CommentType.ticket ? entity.objectId : null,
+      commentId: entity.type == CommentType.comment ? entity.objectId : null,
+      createdUsername: entity.createdUsername,
+      createdTimeAgo: entity.createdDateTime != null
+          ? formatTimeAgo(entity.createdDateTime!)
+          : '',
+      body: entity.body,
+      userAvatar: entity.userAvatar,
+      type: entity.type,
+      isPrivate: entity.isPrivate,
+      replyTotal: entity.replyTotal,
+      replyComments: replyComments,
+    );
+  }
 
-@freezed
-class CommentModel with _$CommentModel {
-  const CommentModel._();
-
-  const factory CommentModel({
-    @Default(-1) final int id,
-    @Default(-1) final int objectId,
-    @Default('') final String creatorKey,
-    final String? created,
-    final String? creatorEmail,
-    final bool? isPrivate,
-    final String? body,
-    @JsonKey(name: 'Avatar') final String? avatar,
-    @JsonKey(name: 'TotalReply') final int? totalReply,
-    final CommentType? objectType,
-    final String? creatorFullName,
-    final String? updated,
-    final String? updaterKey,
-  }) = _CommentModel;
-
-  factory CommentModel.fromJson(Map<String, dynamic> json) =>
-      _$CommentModelFromJson(json);
-
-  static const fakeData = CommentModel(
+  static final skeletonizer = CommentModel(
     id: -1,
-    objectId: -1,
     body: 'Comment body',
+    createdUsername: 'Comment created username',
+    createdTimeAgo: 'Comment created time ago',
+    userAvatar: 'comment user avatar',
   );
 }

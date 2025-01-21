@@ -33,9 +33,6 @@ dependencies:
   core_module:
     path: ../core_module
   dio: ^5.7.0
-  freezed_annotation: ^2.4.4
-  json_annotation: ^4.9.0
-  retrofit: ^4.4.1
   skeletonizer: ^1.4.2
   flutter_bloc: ^8.1.6
   flutter_html: ^3.0.0-beta.2
@@ -43,17 +40,12 @@ dependencies:
   flutter_svg: ^2.0.10+1
   go_router: ^14.3.0
   injectable: ^2.5.0
-  cached_network_image: ^3.4.1
-  flutter_cache_manager_dio: ^4.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
   build_runner: ^2.4.13
-  freezed: ^2.5.7
-  json_serializable: ^6.9.0
-  retrofit_generator: ^9.1.5
   injectable_generator: ^2.6.2
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

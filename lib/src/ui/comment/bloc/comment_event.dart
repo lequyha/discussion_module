@@ -15,3 +15,16 @@ final class CommentsFetched extends CommentEvent {
   @override
   List<Object> get props => [objectId];
 }
+
+final class CommentCreated extends CommentEvent {
+  final int objectId;
+  final String comment;
+
+  const CommentCreated({
+    required this.objectId,
+    required this.comment,
+  });
+
+  @override
+  List<Object> get props => [objectId, comment];
+}

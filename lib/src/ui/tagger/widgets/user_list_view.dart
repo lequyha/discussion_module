@@ -15,16 +15,16 @@ class UserListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8.0),
-      padding: const EdgeInsets.symmetric(horizontal: 2),
+      margin: EdgeInsets.only(bottom: AppSpace.space8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpace.space2),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(
-          Radius.circular(20),
+          Radius.circular(AppBorderRadius.kDefaultBorderRadius),
         ),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.2),
+            color: Colors.black.withValues(alpha: .2),
             blurRadius: 20,
             spreadRadius: 2,
           ),
@@ -59,24 +59,18 @@ class UserListView extends StatelessWidget {
                           itemBuilder: (_, index) {
                             final user = users[index];
                             return ListTile(
-                              leading: Container(
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: NetworkImage(user.avatar),
-                                  ),
-                                ),
+                              key: ValueKey(user.value),
+                              leading: Avatar(
+                                url: user.avatar,
+                                width: 50.0,
+                                height: 50.0,
                               ),
                               title: Text(user.text),
                               subtitle: Text("@${user.value}"),
-                              onTap: () {
-                                tagController.addTag(
-                                  id: user.value,
-                                  name: user.value,
-                                );
-                              },
+                              onTap: () => tagController.addTag(
+                                id: user.value,
+                                name: user.value,
+                              ),
                             );
                           },
                         ),
